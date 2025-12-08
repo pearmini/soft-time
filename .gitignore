@@ -1,0 +1,13 @@
+# Xcode user-specific files
+xcuserdata/
+
+# macOS
+.DS_Store
+
+# Build products
+DerivedData/
+build/
+*.dSYM
+
+# App packaging
+*.ipa
