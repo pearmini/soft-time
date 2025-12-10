@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<notebook>
+  <title>Soft Time</title>
+  <script type="text/markdown">
+    # Soft Time
+  </script>
+  <script type="module">
+    import * as d3 from "d3";
+    import {render} from "./render.js";
+    const seed = 20;
+    const size = 300;
+    const count = 5;
+    const T = d3.range(count).map((i) => 1 - i / (count - 1));
+    const reverse = (fn) => (t) => fn(1 - t);
+    const nodes = [
+      render({size, seed, count, colors: T.map(d3.interpolateViridis)}),
+      render({size, seed, count, colors: T.map(d3.interpolateRdPu)}),
+    ];
+    nodes.forEach(display);
+  </script>
+</notebook>
