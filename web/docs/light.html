@@ -64,7 +64,7 @@
     const theme = view(Inputs.radio(["Dark", "Light"], {label: "Color Theme", value: "Light"}));
     const time = view(Inputs.toggle({label: "Display Time", value: true}));
   </script>
-   <script type="module" type="module">
+  <script type="module">
     if (theme === "Dark") window.location.href = "/";
   </script>
 </notebook>
