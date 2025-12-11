@@ -14,14 +14,66 @@ struct CircleData {
 
 struct ContentView: View {
     private let seed: Double = 100
-    private let blur: Double = 5
-    private let colors: [Color] = [
-        Color(red: 0xfd/255.0, green: 0xe7/255.0, blue: 0x25/255.0), // #fde725
-        Color(red: 0x5e/255.0, green: 0xc9/255.0, blue: 0x62/255.0), // #5ec962
-        Color(red: 0x21/255.0, green: 0x91/255.0, blue: 0x8c/255.0), // #21918c
-        Color(red: 0x3b/255.0, green: 0x52/255.0, blue: 0x8b/255.0), // #3b528b
-        Color(red: 0x44/255.0, green: 0x01/255.0, blue: 0x54/255.0)  // #440154
+    private let blur: Double = 2
+    @State private var currentPaletteIndex: Double = 0
+    
+    // All 6 color palettes
+    private let colorPalettes: [[Color]] = [
+        // Palette 1: Warm oranges/reds
+        [
+            Color(red: 253/255.0, green: 202/255.0, blue: 148/255.0),
+            Color(red: 251/255.0, green: 151/255.0, blue: 100/255.0),
+            Color(red: 233/255.0, green: 89/255.0, blue: 62/255.0),
+            Color(red: 193/255.0, green: 21/255.0, blue: 14/255.0),
+            Color(red: 127/255.0, green: 0/255.0, blue: 0/255.0)
+        ],
+        // Palette 2: Yellow to purple (viridis-like)
+        [
+            Color(red: 0xfd/255.0, green: 0xe7/255.0, blue: 0x25/255.0), // #fde725
+            Color(red: 0x5e/255.0, green: 0xc9/255.0, blue: 0x62/255.0), // #5ec962
+            Color(red: 0x21/255.0, green: 0x91/255.0, blue: 0x8c/255.0), // #21918c
+            Color(red: 0x3b/255.0, green: 0x52/255.0, blue: 0x8b/255.0), // #3b528b
+            Color(red: 0x44/255.0, green: 0x01/255.0, blue: 0x54/255.0)  // #440154
+        ],
+        // Palette 3: Greens
+        [
+            Color(red: 199/255.0, green: 232/255.0, blue: 155/255.0),
+            Color(red: 130/255.0, green: 202/255.0, blue: 125/255.0),
+            Color(red: 61/255.0, green: 162/255.0, blue: 88/255.0),
+            Color(red: 15/255.0, green: 115/255.0, blue: 60/255.0),
+            Color(red: 0/255.0, green: 69/255.0, blue: 41/255.0)
+        ],
+        // Palette 4: Blues
+        [
+            Color(red: 213/255.0, green: 238/255.0, blue: 179/255.0),
+            Color(red: 115/255.0, green: 201/255.0, blue: 189/255.0),
+            Color(red: 40/255.0, green: 151/255.0, blue: 191/255.0),
+            Color(red: 35/255.0, green: 78/255.0, blue: 160/255.0),
+            Color(red: 8/255.0, green: 29/255.0, blue: 88/255.0)
+        ],
+        // Palette 5: Teal/cyan
+        [
+            Color(red: 190/255.0, green: 201/255.0, blue: 226/255.0),
+            Color(red: 117/255.0, green: 173/255.0, blue: 209/255.0),
+            Color(red: 43/255.0, green: 142/255.0, blue: 178/255.0),
+            Color(red: 2/255.0, green: 116/255.0, blue: 109/255.0),
+            Color(red: 1/255.0, green: 70/255.0, blue: 54/255.0)
+        ],
+        // Palette 6: Pinks/purples
+        [
+            Color(red: 251/255.0, green: 181/255.0, blue: 188/255.0),
+            Color(red: 246/255.0, green: 115/255.0, blue: 166/255.0),
+            Color(red: 210/255.0, green: 42/255.0, blue: 145/255.0),
+            Color(red: 143/255.0, green: 2/255.0, blue: 122/255.0),
+            Color(red: 73/255.0, green: 0/255.0, blue: 106/255.0)
+        ]
     ]
+    
+    private var colors: [Color] {
+        let index = Int(currentPaletteIndex.rounded())
+        let clampedIndex = max(0, min(index, colorPalettes.count - 1))
+        return colorPalettes[clampedIndex]
+    }
     
     var body: some View {
         TimelineView(.periodic(from: .now, by: 0.016)) { timelineContext in
@@ -38,6 +90,16 @@ struct ContentView: View {
                 }
             }
         }
+        .focusable()
+        .digitalCrownRotation(
+            $currentPaletteIndex,
+            from: 0,
+            through: Double(colorPalettes.count - 1),
+            by: 1,
+            sensitivity: .medium,
+            isContinuous: false,
+            isHapticFeedbackEnabled: true
+        )
     }
     
     private func createCircles(r: Double, count: Int, seed: Double) -> [CircleData] {
