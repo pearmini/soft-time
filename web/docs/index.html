@@ -2,7 +2,20 @@
 <notebook>
   <title>Soft Time</title>
   <script type="text/markdown">
-    # Soft Time
+    <style>
+      #cell-4 {
+        display: flex;
+        flex-direction: column;
+        margin-top: 120px;
+        justify-content: center;
+        align-items: center;
+      }
+    
+      #cell-4 form {
+        width: 400px !important;
+        margin-bottom: 20px;
+      }
+    </style>
   </script>
   <script type="module">
     import * as d3 from "d3";
@@ -10,12 +23,38 @@
     const seed = 20;
     const size = 300;
     const count = 5;
-    const T = d3.range(count).map((i) => 1 - i / (count - 1));
+    const T = d3.range(count).map((i) => i / (count - 1));
+    const values = (count, start = 0, end = 1) => d3.range(count).map((i) => start + ((end - start) * i) / (count - 1));
     const reverse = (fn) => (t) => fn(1 - t);
-    const nodes = [
-      render({size, seed, count, colors: T.map(d3.interpolateViridis)}),
-      render({size, seed, count, colors: T.map(d3.interpolateRdPu)}),
-    ];
-    nodes.forEach(display);
+  </script>
+  <script type="module">
+    {
+      const timezones = [
+        {tz: "UTC", name: "UTC", colors: values(count, 0.3, 1).map(d3.interpolateOrRd)},
+        {tz: "GMT", name: "GMT", colors: values(count).map(reverse(d3.interpolateViridis))},
+        {tz: "America/New_York", name: "EST", colors: values(count, 0.3, 1).map(d3.interpolateYlGn)},
+        {tz: "America/Los_Angeles", name: "PST", colors: values(count, 0.2, 1).map(d3.interpolateYlGnBu)},
+        {tz: "Europe/Paris", name: "CET", colors: values(count, 0.3, 1).map(d3.interpolatePuBuGn)},
+        {tz: "Asia/Shanghai", name: "CST", colors: values(count, 0.3, 1).map(d3.interpolateRdPu)},
+      ];
+      const nodes = timezones.map(({tz, name, colors}) =>
+        render({
+          size,
+          seed,
+          count,
+          colors,
+          background: "white",
+          timezone: tz,
+          timezoneName: name,
+          showTime: time,
+          scheme: scheme,
+        })
+      );
+      nodes.forEach(display);
+    }
+  </script>
+  <script type="module">
+    const scheme = view(Inputs.radio(["Gradient", "Solid", "None"], {label: "Color Scheme", value: "Gradient"}));
+    const time = view(Inputs.toggle({label: "Display Time", value: true}));
   </script>
 </notebook>
