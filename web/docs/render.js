@@ -1,6 +1,11 @@
 import * as cm from "charmingjs";
 import * as d3 from "d3";
 
+function isDarkTheme(background) {
+  const lowerColor = background.toLowerCase().trim();
+  return lowerColor === "black" || lowerColor === "#000" || lowerColor === "#000000";
+}
+
 function createCircles({r, count, seed}) {
   const random = d3.randomUniform.source(d3.randomLcg(seed * 1000))();
   const randomUniform = (min, max) => random() * (max - min) + min;
@@ -19,7 +24,7 @@ export function render({
   size = 400,
   seed = 100,
   colors = [],
-  blur = 5,
+  blur = 2,
   background = "white",
   timezone = "UTC",
   timezoneName = "UTC",
@@ -28,6 +33,12 @@ export function render({
 } = {}) {
   const ctx = cm.context2d({width: size, height: size});
   const canvas = ctx.canvas;
+
+  // Determine text colors based on background
+  const isDark = isDarkTheme(background);
+  const textColor = isDark ? "#fff" : "#333";
+  const secondaryTextColor = isDark ? "#ccc" : "#666";
+  const strokeColor = isDark ? "#fff" : "#000";
 
   // Create container div
   const container = document.createElement("div");
@@ -39,7 +50,7 @@ export function render({
   const timezoneNameEl = document.createElement("div");
   timezoneNameEl.style.fontWeight = "bold";
   timezoneNameEl.style.fontSize = "14px";
-  timezoneNameEl.style.color = "#333";
+  timezoneNameEl.style.color = textColor;
   timezoneNameEl.style.marginTop = "10px";
   timezoneNameEl.style.fontFamily = "monospace";
   timezoneNameEl.textContent = timezoneName;
@@ -49,7 +60,7 @@ export function render({
   const timeEl = document.createElement("div");
   timeEl.style.fontFamily = "monospace";
   timeEl.style.fontSize = "12px";
-  timeEl.style.color = "#333";
+  timeEl.style.color = secondaryTextColor;
   timeEl.style.marginTop = "5px";
   timeEl.style.display = showTime ? "block" : "none";
 
@@ -112,9 +123,9 @@ export function render({
     });
 
     if (scheme === "None") {
-      // Just draw black strokes, no fill
+      // Draw strokes with color based on background
       ctx.filter = "none";
-      ctx.strokeStyle = "black";
+      ctx.strokeStyle = strokeColor;
       ctx.lineWidth = 2;
       for (let i = 0; i < circles.length; i++) {
         const circle = circles[i];

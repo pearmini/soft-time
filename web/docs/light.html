@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<notebook theme="near-midnight">
+<notebook>
   <title>Soft Time</title>
   <script type="text/markdown">
     <style>
-      html {
-        background-color: #000;
-      }
       #cell-4 {
         display: flex;
         flex-direction: column;
@@ -31,20 +28,20 @@
     const reverse = (fn) => (t) => fn(1 - t);
   </script>
   <script type="module">
-    const inferno = values(count, 0.3, 1).map(d3.interpolateInferno);
-    const virdis = values(count, 0.1, 1).map(d3.interpolateViridis);
-    const cubehelix = values(count, 0.25, 0.8).map(d3.interpolateCubehelixDefault);
-    const rurd = values(count, 0.2, 1).map(reverse(d3.interpolatePuRd));
-    const pubugn = values(count, 0.1, 1).map(d3.interpolatePlasma);
-    const ylorrd = values(count, 0, 1).map(reverse(d3.interpolateYlOrRd));
+    const orrd = values(count, 0.3, 1).map(d3.interpolateOrRd);
+    const viridis = values(count).map(reverse(d3.interpolateViridis));
+    const ylg = values(count, 0.3, 1).map(d3.interpolateYlGn);
+    const ylgnbu = values(count, 0.2, 1).map(d3.interpolateYlGnBu);
+    const pubugn = values(count, 0.3, 1).map(d3.interpolatePuBuGn);
+    const rdpu = values(count, 0.3, 1).map(d3.interpolateRdPu);
     {
       const timezones = [
-        {tz: "UTC", name: "UTC", colors: ylorrd},
-        {tz: "GMT", name: "GMT", colors: inferno},
-        {tz: "America/New_York", name: "EST", colors: virdis},
-        {tz: "America/Los_Angeles", name: "PST", colors: cubehelix},
+        {tz: "UTC", name: "UTC", colors: orrd},
+        {tz: "GMT", name: "GMT", colors: viridis},
+        {tz: "America/New_York", name: "EST", colors: ylg},
+        {tz: "America/Los_Angeles", name: "PST", colors: ylgnbu},
         {tz: "Europe/Paris", name: "CET", colors: pubugn},
-        {tz: "Asia/Shanghai", name: "CST", colors: rurd},
+        {tz: "Asia/Shanghai", name: "CST", colors: rdpu},
       ];
       const nodes = timezones.map(({tz, name, colors}) =>
         render({
@@ -52,11 +49,11 @@
           seed: Math.random() * 1000,
           count,
           colors,
+          background: "white",
           timezone: tz,
           timezoneName: name,
           showTime: time,
           scheme: scheme,
-          background: "black",
         })
       );
       nodes.forEach(display);
@@ -64,10 +61,10 @@
   </script>
   <script type="module">
     const scheme = view(Inputs.radio(["Gradient", "Solid", "None"], {label: "Fill Type", value: "Gradient"}));
-    const theme = view(Inputs.radio(["Dark", "Light"], {label: "Color Theme", value: "Dark"}));
+    const theme = view(Inputs.radio(["Dark", "Light"], {label: "Color Theme", value: "Light"}));
     const time = view(Inputs.toggle({label: "Display Time", value: true}));
   </script>
-  <script type="module" type="module">
-    if (theme === "Light") window.location.href = "/light";
+   <script type="module" type="module">
+    if (theme === "Dark") window.location.href = "/";
   </script>
 </notebook>
