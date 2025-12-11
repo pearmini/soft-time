@@ -13,59 +13,66 @@ struct CircleData {
 }
 
 struct ContentView: View {
-    private let seed: Double = 100
     private let blur: Double = 2
     @State private var currentPaletteIndex: Double = 0
     
+    // Different seed for each of the 6 palettes
+    private var seed: Double {
+        let index = Int(currentPaletteIndex.rounded())
+        let clampedIndex = max(0, min(index, 5))
+        // Each palette gets a unique seed
+        return 100.0 + Double(clampedIndex) * 23.7
+    }
+    
     // All 6 color palettes
     private let colorPalettes: [[Color]] = [
-        // Palette 1: Warm oranges/reds
+        // Palette 1: Red to yellow gradient
         [
-            Color(red: 253/255.0, green: 202/255.0, blue: 148/255.0),
-            Color(red: 251/255.0, green: 151/255.0, blue: 100/255.0),
-            Color(red: 233/255.0, green: 89/255.0, blue: 62/255.0),
-            Color(red: 193/255.0, green: 21/255.0, blue: 14/255.0),
-            Color(red: 127/255.0, green: 0/255.0, blue: 0/255.0)
+            Color(red: 128/255.0, green: 0/255.0, blue: 38/255.0),
+            Color(red: 225/255.0, green: 30/255.0, blue: 32/255.0),
+            Color(red: 253/255.0, green: 137/255.0, blue: 60/255.0),
+            Color(red: 254/255.0, green: 214/255.0, blue: 118/255.0),
+            Color(red: 255/255.0, green: 255/255.0, blue: 204/255.0)
         ],
-        // Palette 2: Yellow to purple (viridis-like)
+        // Palette 2: Purple to yellow
         [
-            Color(red: 0xfd/255.0, green: 0xe7/255.0, blue: 0x25/255.0), // #fde725
-            Color(red: 0x5e/255.0, green: 0xc9/255.0, blue: 0x62/255.0), // #5ec962
-            Color(red: 0x21/255.0, green: 0x91/255.0, blue: 0x8c/255.0), // #21918c
-            Color(red: 0x3b/255.0, green: 0x52/255.0, blue: 0x8b/255.0), // #3b528b
-            Color(red: 0x44/255.0, green: 0x01/255.0, blue: 0x54/255.0)  // #440154
+            Color(red: 106/255.0, green: 23/255.0, blue: 110/255.0), // #6a176e
+            Color(red: 177/255.0, green: 50/255.0, blue: 90/255.0),  // #b1325a
+            Color(red: 234/255.0, green: 99/255.0, blue: 42/255.0),  // #ea632a
+            Color(red: 252/255.0, green: 178/255.0, blue: 22/255.0), // #fcb216
+            Color(red: 252/255.0, green: 255/255.0, blue: 164/255.0) // #fcffa4
         ],
-        // Palette 3: Greens
+        // Palette 3: Purple to green to yellow
         [
-            Color(red: 199/255.0, green: 232/255.0, blue: 155/255.0),
-            Color(red: 130/255.0, green: 202/255.0, blue: 125/255.0),
-            Color(red: 61/255.0, green: 162/255.0, blue: 88/255.0),
-            Color(red: 15/255.0, green: 115/255.0, blue: 60/255.0),
-            Color(red: 0/255.0, green: 69/255.0, blue: 41/255.0)
+            Color(red: 72/255.0, green: 36/255.0, blue: 117/255.0),  // #482475
+            Color(red: 49/255.0, green: 102/255.0, blue: 142/255.0), // #31668e
+            Color(red: 30/255.0, green: 156/255.0, blue: 137/255.0), // #1e9c89
+            Color(red: 108/255.0, green: 205/255.0, blue: 90/255.0), // #6ccd5a
+            Color(red: 253/255.0, green: 231/255.0, blue: 37/255.0) // #fde725
         ],
-        // Palette 4: Blues
+        // Palette 4: Teal to pink to purple
         [
-            Color(red: 213/255.0, green: 238/255.0, blue: 179/255.0),
-            Color(red: 115/255.0, green: 201/255.0, blue: 189/255.0),
-            Color(red: 40/255.0, green: 151/255.0, blue: 191/255.0),
-            Color(red: 35/255.0, green: 78/255.0, blue: 160/255.0),
-            Color(red: 8/255.0, green: 29/255.0, blue: 88/255.0)
+            Color(red: 22/255.0, green: 83/255.0, blue: 76/255.0),
+            Color(red: 75/255.0, green: 120/255.0, blue: 48/255.0),
+            Color(red: 176/255.0, green: 121/255.0, blue: 88/255.0),
+            Color(red: 212/255.0, green: 142/255.0, blue: 195/255.0),
+            Color(red: 193/255.0, green: 202/255.0, blue: 243/255.0)
         ],
-        // Palette 5: Teal/cyan
+        // Palette 5: Deep purple to yellow
         [
-            Color(red: 190/255.0, green: 201/255.0, blue: 226/255.0),
-            Color(red: 117/255.0, green: 173/255.0, blue: 209/255.0),
-            Color(red: 43/255.0, green: 142/255.0, blue: 178/255.0),
-            Color(red: 2/255.0, green: 116/255.0, blue: 109/255.0),
-            Color(red: 1/255.0, green: 70/255.0, blue: 54/255.0)
+            Color(red: 65/255.0, green: 4/255.0, blue: 157/255.0),   // #41049d
+            Color(red: 153/255.0, green: 21/255.0, blue: 159/255.0),  // #99159f
+            Color(red: 214/255.0, green: 85/255.0, blue: 109/255.0), // #d6556d
+            Color(red: 250/255.0, green: 158/255.0, blue: 59/255.0), // #fa9e3b
+            Color(red: 240/255.0, green: 249/255.0, blue: 33/255.0)   // #f0f921
         ],
-        // Palette 6: Pinks/purples
+        // Palette 6: Pink to purple gradient
         [
-            Color(red: 251/255.0, green: 181/255.0, blue: 188/255.0),
-            Color(red: 246/255.0, green: 115/255.0, blue: 166/255.0),
-            Color(red: 210/255.0, green: 42/255.0, blue: 145/255.0),
-            Color(red: 143/255.0, green: 2/255.0, blue: 122/255.0),
-            Color(red: 73/255.0, green: 0/255.0, blue: 106/255.0)
+            Color(red: 183/255.0, green: 11/255.0, blue: 79/255.0),
+            Color(red: 227/255.0, green: 56/255.0, blue: 144/255.0),
+            Color(red: 208/255.0, green: 138/255.0, blue: 194/255.0),
+            Color(red: 220/255.0, green: 201/255.0, blue: 226/255.0),
+            Color(red: 247/255.0, green: 244/255.0, blue: 249/255.0)
         ]
     ]
     
@@ -79,8 +86,8 @@ struct ContentView: View {
         TimelineView(.periodic(from: .now, by: 0.016)) { timelineContext in
             GeometryReader { geometry in
                 ZStack {
-                    // White background
-                    Color.white
+                    // Black background
+                    Color.black
                         .ignoresSafeArea()
                     
                     // Canvas with circles
@@ -163,7 +170,7 @@ struct ContentView: View {
         }
         
         // Draw circles with gradients
-        var prevColor = Color.white
+        var prevColor = Color.black
         
         for i in 0..<circles.count {
             let circle = circles[i]

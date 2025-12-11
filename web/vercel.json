@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/light",
+      "destination": "/light.html"
+    }
+  ]
+}
