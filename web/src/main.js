@@ -137,6 +137,9 @@ function buildControls() {
   const controls = document.createElement("div");
   controls.className = "controls";
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const showTimeInitial = urlParams.get("time") !== "false";
+
   controls.innerHTML = `
     <fieldset>
       <legend>Fill Type</legend>
@@ -151,7 +154,7 @@ function buildControls() {
     </fieldset>
     <fieldset>
       <legend>Display Time</legend>
-      <label><input type="checkbox" name="time" checked /> Show time</label>
+      <label><input type="checkbox" name="time" ${showTimeInitial ? "checked" : ""} /> Show time</label>
     </fieldset>
   `;
 
@@ -202,7 +205,7 @@ function buildControls() {
   updateFullscreenButton();
 
   let scheme = "Gradient";
-  let showTime = true;
+  let showTime = showTimeInitial;
 
   controls.querySelectorAll('input[name="scheme"]').forEach((input) => {
     input.addEventListener("change", () => {
