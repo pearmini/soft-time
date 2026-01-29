@@ -105,6 +105,25 @@ function buildControls() {
     </svg>
   `;
 
+  const fullscreenBtn = document.createElement("button");
+  fullscreenBtn.className = "fullscreen-btn";
+  fullscreenBtn.type = "button";
+  fullscreenBtn.setAttribute("aria-label", "Enter fullscreen");
+  fullscreenBtn.innerHTML = `
+    <svg class="fullscreen-btn__icon fullscreen-btn__icon--enter" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="15 3 21 3 21 9"></polyline>
+      <polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line>
+      <line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg>
+    <svg class="fullscreen-btn__icon fullscreen-btn__icon--exit" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="4 14 10 14 10 20"></polyline>
+      <polyline points="20 10 14 10 14 4"></polyline>
+      <line x1="14" y1="10" x2="21" y2="3"></line>
+      <line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg>
+  `;
+
   const sidebar = document.createElement("aside");
   sidebar.className = "sidebar";
 
@@ -143,7 +162,12 @@ function buildControls() {
   const clocks = document.createElement("div");
   clocks.className = "clocks";
 
-  app.appendChild(moreBtn);
+  const topBar = document.createElement("div");
+  topBar.className = "top-bar";
+  topBar.appendChild(moreBtn);
+  topBar.appendChild(fullscreenBtn);
+
+  app.appendChild(topBar);
   app.appendChild(clocks);
 
   const layout = document.createElement("div");
@@ -157,6 +181,25 @@ function buildControls() {
     moreBtn.classList.toggle("more-btn--open", open);
     moreBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
   });
+
+  function updateFullscreenButton() {
+    const isFullscreen = !!document.fullscreenElement;
+    fullscreenBtn.classList.toggle("fullscreen-btn--active", isFullscreen);
+    fullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Enter fullscreen");
+  }
+
+  fullscreenBtn.addEventListener("click", async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch (_) {}
+  });
+
+  document.addEventListener("fullscreenchange", updateFullscreenButton);
+  updateFullscreenButton();
 
   let scheme = "Gradient";
   let showTime = true;

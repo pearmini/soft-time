@@ -37,11 +37,18 @@ html.light body {
   box-sizing: border-box;
 }
 
-.more-btn {
+.top-bar {
   position: absolute;
   top: 16px;
   left: 16px;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.more-btn,
+.fullscreen-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,23 +77,43 @@ html.light body {
   display: block;
 }
 
-body:not(.light) .more-btn {
+body:not(.light) .more-btn,
+body:not(.light) .fullscreen-btn {
   background: #222;
   color: #eee;
 }
 
-body:not(.light) .more-btn:hover {
+body:not(.light) .more-btn:hover,
+body:not(.light) .fullscreen-btn:hover {
   background: #333;
 }
 
-body.light .more-btn {
+body.light .more-btn,
+body.light .fullscreen-btn {
   background: #fff;
   color: #333;
   border-color: rgba(0, 0, 0, 0.15);
 }
 
-body.light .more-btn:hover {
+body.light .more-btn:hover,
+body.light .fullscreen-btn:hover {
   background: #f0f0f0;
+}
+
+.fullscreen-btn__icon {
+  flex-shrink: 0;
+}
+
+.fullscreen-btn__icon--exit {
+  display: none;
+}
+
+.fullscreen-btn--active .fullscreen-btn__icon--enter {
+  display: none;
+}
+
+.fullscreen-btn--active .fullscreen-btn__icon--exit {
+  display: block;
 }
 
 .sidebar {
