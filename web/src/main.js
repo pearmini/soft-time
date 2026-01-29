@@ -108,6 +108,10 @@ function buildControls() {
   const sidebar = document.createElement("aside");
   sidebar.className = "sidebar";
 
+  const sidebarTitle = document.createElement("h2");
+  sidebarTitle.className = "sidebar__title";
+  sidebarTitle.textContent = "Soft Time";
+
   const controls = document.createElement("div");
   controls.className = "controls";
 
@@ -129,6 +133,7 @@ function buildControls() {
     </fieldset>
   `;
 
+  sidebar.appendChild(sidebarTitle);
   sidebar.appendChild(controls);
 
   const clocks = document.createElement("div");
