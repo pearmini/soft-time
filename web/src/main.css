@@ -1,0 +1,63 @@
+html {
+  background-color: #000;
+}
+
+html.light,
+html.light body {
+  background-color: #fafafa;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 20px 20px;
+  font-family: system-ui, sans-serif;
+}
+
+.clocks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 24px;
+  justify-items: center;
+  align-items: start;
+  margin-bottom: 96px;
+}
+
+body:not(.light) .controls {
+  background: #111;
+  color: #eee;
+}
+
+body.light .controls {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.controls fieldset {
+  border: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.controls legend {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 16px;
+  cursor: pointer;
+}
+
+.controls {
+  width: 400px;
+  margin-top: auto;
+  padding: 20px;
+  border-radius: 8px;
+}
