@@ -7,7 +7,7 @@ const values = (count, start = 0, end = 1) =>
   d3.range(count).map((i) => start + ((end - start) * i) / (count - 1));
 const reverse = (fn) => (t) => fn(1 - t);
 
-let lightMode = window.location.pathname === "/light";
+let lightMode = false;
 const isLight = () => lightMode;
 
 const darkPalettes = {
@@ -89,6 +89,25 @@ function buildControls() {
   document.documentElement.classList.toggle("light", isLight());
   document.body.classList.toggle("light", isLight());
 
+  const moreBtn = document.createElement("button");
+  moreBtn.className = "more-btn";
+  moreBtn.type = "button";
+  moreBtn.setAttribute("aria-label", "Open menu");
+  moreBtn.innerHTML = `
+    <svg class="more-btn__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  `;
+
+  const sidebarBackdrop = document.createElement("div");
+  sidebarBackdrop.className = "sidebar-backdrop";
+  sidebarBackdrop.setAttribute("aria-hidden", "true");
+
+  const sidebar = document.createElement("aside");
+  sidebar.className = "sidebar";
+
   const controls = document.createElement("div");
   controls.className = "controls";
 
@@ -110,11 +129,28 @@ function buildControls() {
     </fieldset>
   `;
 
+  sidebar.appendChild(controls);
+
   const clocks = document.createElement("div");
   clocks.className = "clocks";
 
+  app.appendChild(moreBtn);
   app.appendChild(clocks);
-  app.appendChild(controls);
+  document.body.appendChild(sidebarBackdrop);
+  document.body.appendChild(sidebar);
+
+  function toggleSidebar() {
+    const open = sidebar.classList.toggle("sidebar--open");
+    sidebarBackdrop.classList.toggle("sidebar-backdrop--visible", open);
+    sidebarBackdrop.setAttribute("aria-hidden", String(!open));
+  }
+
+  moreBtn.addEventListener("click", toggleSidebar);
+  sidebarBackdrop.addEventListener("click", () => {
+    sidebar.classList.remove("sidebar--open");
+    sidebarBackdrop.classList.remove("sidebar-backdrop--visible");
+    sidebarBackdrop.setAttribute("aria-hidden", "true");
+  });
 
   let scheme = "Gradient";
   let showTime = true;
