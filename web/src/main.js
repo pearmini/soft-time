@@ -164,16 +164,16 @@ function buildControls() {
 
   const topBar = document.createElement("div");
   topBar.className = "top-bar";
-  topBar.appendChild(moreBtn);
   topBar.appendChild(fullscreenBtn);
+  topBar.appendChild(moreBtn);
 
   app.appendChild(topBar);
   app.appendChild(clocks);
 
   const layout = document.createElement("div");
   layout.className = "layout";
-  layout.appendChild(sidebar);
   layout.appendChild(app);
+  layout.appendChild(sidebar);
   document.body.appendChild(layout);
 
   moreBtn.addEventListener("click", () => {

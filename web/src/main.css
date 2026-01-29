@@ -40,7 +40,8 @@ html.light body {
 .top-bar {
   position: absolute;
   top: 16px;
-  left: 16px;
+  right: 16px;
+  left: auto;
   z-index: 10;
   display: flex;
   align-items: center;
@@ -139,13 +140,13 @@ body.light .fullscreen-btn:hover {
 body:not(.light) .sidebar__inner {
   background: #111;
   color: #eee;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 body.light .sidebar__inner {
   background: #fff;
   color: #333;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .sidebar__title {
