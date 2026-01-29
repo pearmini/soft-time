@@ -49,9 +49,9 @@ export function render({
   // Create timezone name element
   const timezoneNameEl = document.createElement("div");
   timezoneNameEl.style.fontWeight = "bold";
-  timezoneNameEl.style.fontSize = "14px";
+  timezoneNameEl.style.fontSize = "12px";
   timezoneNameEl.style.color = textColor;
-  timezoneNameEl.style.marginTop = "10px";
+  timezoneNameEl.style.marginTop = "4px";
   timezoneNameEl.style.fontFamily = "monospace";
   timezoneNameEl.textContent = timezoneName;
   timezoneNameEl.style.display = showTime ? "block" : "none";
@@ -59,9 +59,9 @@ export function render({
   // Create time element
   const timeEl = document.createElement("div");
   timeEl.style.fontFamily = "monospace";
-  timeEl.style.fontSize = "12px";
+  timeEl.style.fontSize = "10px";
   timeEl.style.color = secondaryTextColor;
-  timeEl.style.marginTop = "5px";
+  timeEl.style.marginTop = "2px";
   timeEl.style.display = showTime ? "block" : "none";
 
   container.appendChild(canvas);

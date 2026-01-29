@@ -134,7 +134,7 @@ body.light .sidebar__inner {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, auto);
-  gap: 24px;
+  gap: 12px;
   justify-items: center;
   align-items: start;
 }
