@@ -94,19 +94,22 @@ function buildControls() {
   moreBtn.type = "button";
   moreBtn.setAttribute("aria-label", "Open menu");
   moreBtn.innerHTML = `
-    <svg class="more-btn__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <svg class="more-btn__icon more-btn__icon--menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
       <line x1="3" y1="6" x2="21" y2="6"/>
       <line x1="3" y1="12" x2="21" y2="12"/>
       <line x1="3" y1="18" x2="21" y2="18"/>
     </svg>
+    <svg class="more-btn__icon more-btn__icon--close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
   `;
-
-  const sidebarBackdrop = document.createElement("div");
-  sidebarBackdrop.className = "sidebar-backdrop";
-  sidebarBackdrop.setAttribute("aria-hidden", "true");
 
   const sidebar = document.createElement("aside");
   sidebar.className = "sidebar";
+
+  const sidebarInner = document.createElement("div");
+  sidebarInner.className = "sidebar__inner";
 
   const sidebarTitle = document.createElement("h2");
   sidebarTitle.className = "sidebar__title";
@@ -133,28 +136,26 @@ function buildControls() {
     </fieldset>
   `;
 
-  sidebar.appendChild(sidebarTitle);
-  sidebar.appendChild(controls);
+  sidebarInner.appendChild(sidebarTitle);
+  sidebarInner.appendChild(controls);
+  sidebar.appendChild(sidebarInner);
 
   const clocks = document.createElement("div");
   clocks.className = "clocks";
 
   app.appendChild(moreBtn);
   app.appendChild(clocks);
-  document.body.appendChild(sidebarBackdrop);
-  document.body.appendChild(sidebar);
 
-  function toggleSidebar() {
+  const layout = document.createElement("div");
+  layout.className = "layout";
+  layout.appendChild(sidebar);
+  layout.appendChild(app);
+  document.body.appendChild(layout);
+
+  moreBtn.addEventListener("click", () => {
     const open = sidebar.classList.toggle("sidebar--open");
-    sidebarBackdrop.classList.toggle("sidebar-backdrop--visible", open);
-    sidebarBackdrop.setAttribute("aria-hidden", String(!open));
-  }
-
-  moreBtn.addEventListener("click", toggleSidebar);
-  sidebarBackdrop.addEventListener("click", () => {
-    sidebar.classList.remove("sidebar--open");
-    sidebarBackdrop.classList.remove("sidebar-backdrop--visible");
-    sidebarBackdrop.setAttribute("aria-hidden", "true");
+    moreBtn.classList.toggle("more-btn--open", open);
+    moreBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
   });
 
   let scheme = "Gradient";

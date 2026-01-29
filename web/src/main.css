@@ -16,7 +16,18 @@ html.light body {
   background-color: #fafafa;
 }
 
+.layout {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 #app {
+  position: relative;
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +38,7 @@ html.light body {
 }
 
 .more-btn {
-  position: fixed;
+  position: absolute;
   top: 16px;
   left: 16px;
   z-index: 10;
@@ -45,6 +56,18 @@ html.light body {
 
 .more-btn__icon {
   flex-shrink: 0;
+}
+
+.more-btn__icon--close {
+  display: none;
+}
+
+.more-btn--open .more-btn__icon--menu {
+  display: none;
+}
+
+.more-btn--open .more-btn__icon--close {
+  display: block;
 }
 
 body:not(.light) .more-btn {
@@ -67,19 +90,35 @@ body.light .more-btn:hover {
 }
 
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 20;
-  width: 280px;
-  max-width: 90vw;
-  height: 100vh;
-  padding: 24px;
-  padding-top: 24px;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
-  transform: translateX(-100%);
-  transition: transform 0.25s ease;
+  width: 0;
+  height: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: width 0.25s ease;
+}
+
+.sidebar--open {
+  width: 320px;
+}
+
+.sidebar__inner {
+  width: 320px;
+  height: 100%;
+  padding: 16px;
   overflow-y: auto;
+  box-sizing: border-box;
+}
+
+body:not(.light) .sidebar__inner {
+  background: #111;
+  color: #eee;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light .sidebar__inner {
+  background: #fff;
+  color: #333;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .sidebar__title {
@@ -90,35 +129,6 @@ body.light .more-btn:hover {
   border-bottom: 1px solid currentColor;
 }
 
-.sidebar--open {
-  transform: translateX(0);
-}
-
-.sidebar-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 18;
-  background: rgba(0, 0, 0, 0.4);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-}
-
-.sidebar-backdrop--visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-body:not(.light) .sidebar {
-  background: #111;
-  color: #eee;
-}
-
-body.light .sidebar {
-  background: #fff;
-  color: #333;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
-}
 
 .clocks {
   display: grid;
@@ -161,4 +171,5 @@ body.light .controls {
 .controls {
   width: 100%;
   padding: 0;
+  font-size: 0.875rem;
 }
