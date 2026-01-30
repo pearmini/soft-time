@@ -167,6 +167,11 @@ body.light .sidebar__inner {
   align-items: start;
 }
 
+.clocks--ipad {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0px;
+}
+
 body:not(.light) .controls {
   background: transparent;
   color: #eee;

@@ -138,7 +138,8 @@ function buildControls() {
   controls.className = "controls";
 
   const urlParams = new URLSearchParams(window.location.search);
-  const showTimeInitial = urlParams.get("time") !== "false";
+  const ipadMode = urlParams.get("ipad") === "true";
+  const showTimeInitial = ipadMode ? false : urlParams.get("time") !== "false";
 
   controls.innerHTML = `
     <fieldset>
@@ -154,7 +155,7 @@ function buildControls() {
     </fieldset>
     <fieldset>
       <legend>Display Time</legend>
-      <label><input type="checkbox" name="time" ${showTimeInitial ? "checked" : ""} /> Show time</label>
+      <label><input type="checkbox" name="time" ${showTimeInitial ? "checked" : ""} ${ipadMode ? "disabled" : ""} /> Show time</label>
     </fieldset>
   `;
 
@@ -163,7 +164,7 @@ function buildControls() {
   sidebar.appendChild(sidebarInner);
 
   const clocks = document.createElement("div");
-  clocks.className = "clocks";
+  clocks.className = "clocks" + (ipadMode ? " clocks--ipad" : "");
 
   const topBar = document.createElement("div");
   topBar.className = "top-bar";
