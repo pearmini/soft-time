@@ -54,7 +54,7 @@ function getBackground() {
   return isLight() ? "#fafafa" : "black";
 }
 
-function renderClocks(scheme, showTime) {
+function renderClocks(scheme, showTime, blur = 2) {
   clockNodes.forEach((node) => {
     if (node.cleanup) node.cleanup();
     node.remove();
@@ -78,6 +78,7 @@ function renderClocks(scheme, showTime) {
       showTime,
       scheme,
       background,
+      blur,
     });
     container.appendChild(node);
     clockNodes.push(node);
@@ -138,7 +139,8 @@ function buildControls() {
   controls.className = "controls";
 
   const urlParams = new URLSearchParams(window.location.search);
-  const showTimeInitial = urlParams.get("time") !== "false";
+  const ipadMode = urlParams.get("ipad") === "true";
+  const showTimeInitial = ipadMode ? false : urlParams.get("time") !== "false";
 
   controls.innerHTML = `
     <fieldset>
@@ -154,7 +156,7 @@ function buildControls() {
     </fieldset>
     <fieldset>
       <legend>Display Time</legend>
-      <label><input type="checkbox" name="time" ${showTimeInitial ? "checked" : ""} /> Show time</label>
+      <label><input type="checkbox" name="time" ${showTimeInitial ? "checked" : ""} ${ipadMode ? "disabled" : ""} /> Show time</label>
     </fieldset>
   `;
 
@@ -163,15 +165,59 @@ function buildControls() {
   sidebar.appendChild(sidebarInner);
 
   const clocks = document.createElement("div");
-  clocks.className = "clocks";
+  clocks.className = "clocks" + (ipadMode ? " clocks--ipad" : "");
+
+  const schemeBtnGroup = document.createElement("div");
+  schemeBtnGroup.className = "scheme-btn-group";
+  const schemes = ["Gradient", "Solid", "None"];
+  schemes.forEach((value) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "scheme-btn";
+    btn.dataset.scheme = value;
+    btn.textContent = value;
+    schemeBtnGroup.appendChild(btn);
+  });
+
+  const themeBtn = document.createElement("button");
+  themeBtn.className = "theme-btn";
+  themeBtn.type = "button";
+  themeBtn.setAttribute("aria-label", "Toggle dark/light mode");
+  themeBtn.innerHTML = `
+    <svg class="theme-btn__icon theme-btn__icon--sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/>
+      <line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+    <svg class="theme-btn__icon theme-btn__icon--moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  `;
+
+  const controlsColumn = document.createElement("div");
+  controlsColumn.className = "controls-column" + (ipadMode ? " controls-column--visible" : "");
+  controlsColumn.appendChild(schemeBtnGroup);
+  controlsColumn.appendChild(themeBtn);
+
+  const clocksRow = document.createElement("div");
+  clocksRow.className = "clocks-row";
+  clocksRow.appendChild(clocks);
+  clocksRow.appendChild(controlsColumn);
 
   const topBar = document.createElement("div");
   topBar.className = "top-bar";
   topBar.appendChild(fullscreenBtn);
   topBar.appendChild(moreBtn);
+  if (ipadMode) moreBtn.classList.add("more-btn--hidden");
 
   app.appendChild(topBar);
-  app.appendChild(clocks);
+  app.appendChild(clocksRow);
 
   const layout = document.createElement("div");
   layout.className = "layout";
@@ -206,17 +252,48 @@ function buildControls() {
 
   let scheme = "Gradient";
   let showTime = showTimeInitial;
+  const blur = 2;
+
+  function updateThemeBtnIcon() {
+    themeBtn.classList.toggle("theme-btn--light", lightMode);
+    themeBtn.setAttribute("aria-label", lightMode ? "Switch to dark mode" : "Switch to light mode");
+  }
+
+  function updateSchemeButtons() {
+    schemeBtnGroup.querySelectorAll(".scheme-btn").forEach((btn) => {
+      btn.classList.toggle("scheme-btn--active", btn.dataset.scheme === scheme);
+    });
+  }
+
+  schemeBtnGroup.querySelectorAll(".scheme-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      scheme = btn.dataset.scheme;
+      controls.querySelector(`input[name="scheme"][value="${scheme}"]`).checked = true;
+      updateSchemeButtons();
+      renderClocks(scheme, showTime, blur);
+    });
+  });
+
+  themeBtn.addEventListener("click", () => {
+    lightMode = !lightMode;
+    document.documentElement.classList.toggle("light", lightMode);
+    document.body.classList.toggle("light", lightMode);
+    controls.querySelector(`input[name="theme"][value="${lightMode ? "Light" : "Dark"}"]`).checked = true;
+    updateThemeBtnIcon();
+    renderClocks(scheme, showTime, blur);
+  });
 
   controls.querySelectorAll('input[name="scheme"]').forEach((input) => {
     input.addEventListener("change", () => {
       scheme = input.value;
-      renderClocks(scheme, showTime);
+      updateSchemeButtons();
+      renderClocks(scheme, showTime, blur);
     });
   });
 
   controls.querySelector('input[name="time"]').addEventListener("change", (e) => {
     showTime = e.target.checked;
-    renderClocks(scheme, showTime);
+    renderClocks(scheme, showTime, blur);
   });
 
   controls.querySelectorAll('input[name="theme"]').forEach((input) => {
@@ -224,11 +301,14 @@ function buildControls() {
       lightMode = input.value === "Light";
       document.documentElement.classList.toggle("light", lightMode);
       document.body.classList.toggle("light", lightMode);
-      renderClocks(scheme, showTime);
+      updateThemeBtnIcon();
+      renderClocks(scheme, showTime, blur);
     });
   });
 
-  renderClocks(scheme, showTime);
+  updateThemeBtnIcon();
+  updateSchemeButtons();
+  renderClocks(scheme, showTime, blur);
 }
 
 buildControls();

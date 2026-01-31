@@ -78,6 +78,10 @@ html.light body {
   display: block;
 }
 
+.more-btn--hidden {
+  display: none !important;
+}
+
 body:not(.light) .more-btn,
 body:not(.light) .fullscreen-btn {
   background: #222;
@@ -158,6 +162,16 @@ body.light .sidebar__inner {
 }
 
 
+.clocks-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  flex: 1;
+  min-width: 0;
+}
+
 .clocks {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -165,6 +179,119 @@ body.light .sidebar__inner {
   gap: 12px;
   justify-items: center;
   align-items: start;
+}
+
+.controls-column {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 56px;
+}
+
+.controls-column--visible {
+  display: flex;
+}
+
+.scheme-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.scheme-btn {
+  width: 120px;
+  height: 120px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+body:not(.light) .scheme-btn {
+  background: #222;
+  color: #eee;
+}
+
+body:not(.light) .scheme-btn:hover {
+  background: #333;
+}
+
+body:not(.light) .scheme-btn.scheme-btn--active {
+  background: #444;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+body.light .scheme-btn {
+  background: #fff;
+  color: #333;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light .scheme-btn:hover {
+  background: #f0f0f0;
+}
+
+body.light .scheme-btn.scheme-btn--active {
+  background: #e0e0e0;
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.theme-btn__icon {
+  flex-shrink: 0;
+}
+
+.theme-btn__icon--moon {
+  display: none;
+}
+
+.theme-btn--light .theme-btn__icon--sun {
+  display: none;
+}
+
+.theme-btn--light .theme-btn__icon--moon {
+  display: block;
+}
+
+body:not(.light) .theme-btn {
+  background: #222;
+  color: #eee;
+}
+
+body:not(.light) .theme-btn:hover {
+  background: #333;
+}
+
+body.light .theme-btn {
+  background: #fff;
+  color: #333;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light .theme-btn:hover {
+  background: #f0f0f0;
+}
+
+.clocks--ipad {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0px;
 }
 
 body:not(.light) .controls {
