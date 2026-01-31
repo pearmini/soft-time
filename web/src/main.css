@@ -185,7 +185,7 @@ body.light .sidebar__inner {
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: 32px;
+  gap: 56px;
 }
 
 .controls-column--visible {
@@ -195,12 +195,16 @@ body.light .sidebar__inner {
 .scheme-btn-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 40px;
 }
 
 .scheme-btn {
   width: 120px;
-  padding: 12px 24px;
+  height: 120px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
