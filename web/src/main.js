@@ -169,41 +169,68 @@ function buildControls() {
 
   const schemeBtnGroup = document.createElement("div");
   schemeBtnGroup.className = "scheme-btn-group";
-  const schemes = ["Gradient", "Solid", "None"];
-  schemes.forEach((value) => {
+  schemeBtnGroup.setAttribute("role", "radiogroup");
+  schemeBtnGroup.setAttribute("aria-label", "Fill type");
+  const schemes = [
+    {
+      value: "Gradient",
+      icon: `<svg class="scheme-btn__icon scheme-btn__icon--gradient" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="6" opacity="0.3"/><circle cx="12" cy="12" r="4" opacity="0.6"/><circle cx="12" cy="12" r="8"/></svg>`,
+    },
+    {
+      value: "Solid",
+      icon: `<svg class="scheme-btn__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="currentColor" stroke="currentColor"/></svg>`,
+    },
+    {
+      value: "None",
+      icon: `<svg class="scheme-btn__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>`,
+    },
+  ];
+  schemes.forEach(({ value, icon }) => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "scheme-btn";
     btn.dataset.scheme = value;
-    btn.textContent = value;
+    btn.setAttribute("role", "radio");
+    btn.setAttribute("aria-checked", "false");
+    btn.innerHTML = `
+      <span class="scheme-btn__icon-wrap">${icon}</span>
+      <span class="scheme-btn__label">${value}</span>
+    `;
     schemeBtnGroup.appendChild(btn);
   });
 
-  const themeBtn = document.createElement("button");
-  themeBtn.className = "theme-btn";
-  themeBtn.type = "button";
-  themeBtn.setAttribute("aria-label", "Toggle dark/light mode");
-  themeBtn.innerHTML = `
-    <svg class="theme-btn__icon theme-btn__icon--sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="5"/>
-      <line x1="12" y1="1" x2="12" y2="3"/>
-      <line x1="12" y1="21" x2="12" y2="23"/>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-      <line x1="1" y1="12" x2="3" y2="12"/>
-      <line x1="21" y1="12" x2="23" y2="12"/>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-    </svg>
-    <svg class="theme-btn__icon theme-btn__icon--moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-    </svg>
-  `;
+  const themeBtnGroup = document.createElement("div");
+  themeBtnGroup.className = "theme-btn-group";
+  themeBtnGroup.setAttribute("role", "radiogroup");
+  themeBtnGroup.setAttribute("aria-label", "Color theme");
+  const themes = [
+    {
+      value: "Dark",
+      icon: `<svg class="theme-btn__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+    },
+    {
+      value: "Light",
+      icon: `<svg class="theme-btn__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+    },
+  ];
+  themes.forEach(({ value, icon }) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "theme-btn";
+    btn.dataset.theme = value;
+    btn.setAttribute("role", "radio");
+    btn.setAttribute("aria-checked", "false");
+    btn.innerHTML = `
+      <span class="theme-btn__icon-wrap">${icon}</span>
+      <span class="theme-btn__label">${value}</span>
+    `;
+    themeBtnGroup.appendChild(btn);
+  });
 
   const controlsColumn = document.createElement("div");
   controlsColumn.className = "controls-column" + (ipadMode ? " controls-column--visible" : "");
   controlsColumn.appendChild(schemeBtnGroup);
-  controlsColumn.appendChild(themeBtn);
+  controlsColumn.appendChild(themeBtnGroup);
 
   const clocksRow = document.createElement("div");
   clocksRow.className = "clocks-row";
@@ -254,33 +281,80 @@ function buildControls() {
   let showTime = showTimeInitial;
   const blur = 2;
 
-  function updateThemeBtnIcon() {
-    themeBtn.classList.toggle("theme-btn--light", lightMode);
-    themeBtn.setAttribute("aria-label", lightMode ? "Switch to dark mode" : "Switch to light mode");
+  function updateThemeButtons() {
+    themeBtnGroup.querySelectorAll(".theme-btn").forEach((btn) => {
+      const isActive = btn.dataset.theme === (lightMode ? "Light" : "Dark");
+      btn.classList.toggle("theme-btn--active", isActive);
+      btn.setAttribute("aria-checked", isActive ? "true" : "false");
+    });
   }
 
   function updateSchemeButtons() {
     schemeBtnGroup.querySelectorAll(".scheme-btn").forEach((btn) => {
-      btn.classList.toggle("scheme-btn--active", btn.dataset.scheme === scheme);
+      const isActive = btn.dataset.scheme === scheme;
+      btn.classList.toggle("scheme-btn--active", isActive);
+      btn.setAttribute("aria-checked", isActive ? "true" : "false");
     });
   }
 
-  schemeBtnGroup.querySelectorAll(".scheme-btn").forEach((btn) => {
+  const schemeBtns = schemeBtnGroup.querySelectorAll(".scheme-btn");
+  schemeBtns.forEach((btn, index) => {
     btn.addEventListener("click", () => {
       scheme = btn.dataset.scheme;
       controls.querySelector(`input[name="scheme"][value="${scheme}"]`).checked = true;
       updateSchemeButtons();
       renderClocks(scheme, showTime, blur);
     });
+    btn.addEventListener("keydown", (e) => {
+      let nextIndex = index;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        nextIndex = Math.min(index + 1, schemeBtns.length - 1);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        nextIndex = Math.max(index - 1, 0);
+      }
+      if (nextIndex !== index) {
+        const nextBtn = schemeBtns[nextIndex];
+        scheme = nextBtn.dataset.scheme;
+        controls.querySelector(`input[name="scheme"][value="${scheme}"]`).checked = true;
+        updateSchemeButtons();
+        renderClocks(scheme, showTime, blur);
+        nextBtn.focus();
+      }
+    });
   });
 
-  themeBtn.addEventListener("click", () => {
-    lightMode = !lightMode;
-    document.documentElement.classList.toggle("light", lightMode);
-    document.body.classList.toggle("light", lightMode);
-    controls.querySelector(`input[name="theme"][value="${lightMode ? "Light" : "Dark"}"]`).checked = true;
-    updateThemeBtnIcon();
-    renderClocks(scheme, showTime, blur);
+  const themeBtns = themeBtnGroup.querySelectorAll(".theme-btn");
+  themeBtns.forEach((btn, index) => {
+    btn.addEventListener("click", () => {
+      lightMode = btn.dataset.theme === "Light";
+      document.documentElement.classList.toggle("light", lightMode);
+      document.body.classList.toggle("light", lightMode);
+      controls.querySelector(`input[name="theme"][value="${lightMode ? "Light" : "Dark"}"]`).checked = true;
+      updateThemeButtons();
+      renderClocks(scheme, showTime, blur);
+    });
+    btn.addEventListener("keydown", (e) => {
+      let nextIndex = index;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        nextIndex = Math.min(index + 1, themeBtns.length - 1);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        nextIndex = Math.max(index - 1, 0);
+      }
+      if (nextIndex !== index) {
+        const nextBtn = themeBtns[nextIndex];
+        lightMode = nextBtn.dataset.theme === "Light";
+        document.documentElement.classList.toggle("light", lightMode);
+        document.body.classList.toggle("light", lightMode);
+        controls.querySelector(`input[name="theme"][value="${lightMode ? "Light" : "Dark"}"]`).checked = true;
+        updateThemeButtons();
+        renderClocks(scheme, showTime, blur);
+        nextBtn.focus();
+      }
+    });
   });
 
   controls.querySelectorAll('input[name="scheme"]').forEach((input) => {
@@ -301,12 +375,12 @@ function buildControls() {
       lightMode = input.value === "Light";
       document.documentElement.classList.toggle("light", lightMode);
       document.body.classList.toggle("light", lightMode);
-      updateThemeBtnIcon();
+      updateThemeButtons();
       renderClocks(scheme, showTime, blur);
     });
   });
 
-  updateThemeBtnIcon();
+  updateThemeButtons();
   updateSchemeButtons();
   renderClocks(scheme, showTime, blur);
 }
