@@ -1,10 +1,9 @@
 import * as d3 from "d3";
-import { render } from "./render.js";
+import {render} from "./render.js";
 
 const size = 300;
 const count = 5;
-const values = (count, start = 0, end = 1) =>
-  d3.range(count).map((i) => start + ((end - start) * i) / (count - 1));
+const values = (count, start = 0, end = 1) => d3.range(count).map((i) => start + ((end - start) * i) / (count - 1));
 const reverse = (fn) => (t) => fn(1 - t);
 
 let lightMode = false;
@@ -29,16 +28,19 @@ const lightPalettes = {
 };
 
 const timezones = [
-  { tz: "UTC", name: "UTC" },
-  { tz: "GMT", name: "GMT" },
-  { tz: "America/New_York", name: "EST" },
-  { tz: "America/Los_Angeles", name: "PST" },
-  { tz: "Europe/Paris", name: "CET" },
-  { tz: "Asia/Shanghai", name: "CST" },
+  {tz: "UTC", name: "UTC"},
+  {tz: "GMT", name: "GMT"},
+  {tz: "America/New_York", name: "EST"},
+  {tz: "America/Los_Angeles", name: "PST"},
+  {tz: "Europe/Paris", name: "CET"},
+  {tz: "Asia/Shanghai", name: "CST"},
 ];
 
 const darkColors = ["ylorrd", "inferno", "viridis", "cubehelix", "pubugn", "rurd"];
 const lightColors = ["orrd", "viridis", "ylg", "ylgnbu", "pubugn", "rdpu"];
+
+// Generate seeds once per page load; reused when controls change
+const seeds = timezones.map(() => Math.random() * 1000);
 
 let clockNodes = [];
 
@@ -66,11 +68,11 @@ function renderClocks(scheme, showTime, blur = 2) {
   const background = getBackground();
 
   const container = document.querySelector(".clocks");
-  timezones.forEach(({ tz, name }, i) => {
+  timezones.forEach(({tz, name}, i) => {
     const colors = palettes[colorKeys[i]];
     const node = render({
       size,
-      seed: Math.random() * 1000,
+      seed: seeds[i],
       count,
       colors,
       timezone: tz,
@@ -156,7 +158,9 @@ function buildControls() {
     </fieldset>
     <fieldset>
       <legend>Display Time</legend>
-      <label><input type="checkbox" name="time" ${showTimeInitial ? "checked" : ""} ${ipadMode ? "disabled" : ""} /> Show time</label>
+      <label><input type="checkbox" name="time" ${showTimeInitial ? "checked" : ""} ${
+    ipadMode ? "disabled" : ""
+  } /> Show time</label>
     </fieldset>
   `;
 
@@ -185,7 +189,7 @@ function buildControls() {
       icon: `<svg class="scheme-btn__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>`,
     },
   ];
-  schemes.forEach(({ value, icon }) => {
+  schemes.forEach(({value, icon}) => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "scheme-btn";
@@ -213,7 +217,7 @@ function buildControls() {
       icon: `<svg class="theme-btn__icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
     },
   ];
-  themes.forEach(({ value, icon }) => {
+  themes.forEach(({value, icon}) => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "theme-btn";
@@ -234,6 +238,9 @@ function buildControls() {
 
   const clocksRow = document.createElement("div");
   clocksRow.className = "clocks-row";
+  if (ipadMode) {
+    clocksRow.style.marginBottom = "100px";
+  }
   clocksRow.appendChild(clocks);
   clocksRow.appendChild(controlsColumn);
 
