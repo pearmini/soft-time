@@ -11,6 +11,10 @@ body {
   font-family: system-ui, sans-serif;
 }
 
+html, body {
+  touch-action: none;
+}
+
 html.light,
 html.light body {
   background-color: #fafafa;
