@@ -92,38 +92,15 @@ function buildControls() {
   document.documentElement.classList.toggle("light", isLight());
   document.body.classList.toggle("light", isLight());
 
-  const moreBtn = document.createElement("button");
-  moreBtn.className = "more-btn";
-  moreBtn.type = "button";
-  moreBtn.setAttribute("aria-label", "Open menu");
-  moreBtn.innerHTML = `
-    <svg class="more-btn__icon more-btn__icon--menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+  const menuBtn = document.createElement("button");
+  menuBtn.className = "menu-btn";
+  menuBtn.type = "button";
+  menuBtn.setAttribute("aria-label", "Open menu");
+  menuBtn.innerHTML = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
       <line x1="3" y1="6" x2="21" y2="6"/>
       <line x1="3" y1="12" x2="21" y2="12"/>
       <line x1="3" y1="18" x2="21" y2="18"/>
-    </svg>
-    <svg class="more-btn__icon more-btn__icon--close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-      <line x1="18" y1="6" x2="6" y2="18"/>
-      <line x1="6" y1="6" x2="18" y2="18"/>
-    </svg>
-  `;
-
-  const fullscreenBtn = document.createElement("button");
-  fullscreenBtn.className = "fullscreen-btn";
-  fullscreenBtn.type = "button";
-  fullscreenBtn.setAttribute("aria-label", "Enter fullscreen");
-  fullscreenBtn.innerHTML = `
-    <svg class="fullscreen-btn__icon fullscreen-btn__icon--enter" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <polyline points="15 3 21 3 21 9"></polyline>
-      <polyline points="9 21 3 21 3 15"></polyline>
-      <line x1="21" y1="3" x2="14" y2="10"></line>
-      <line x1="3" y1="21" x2="10" y2="14"></line>
-    </svg>
-    <svg class="fullscreen-btn__icon fullscreen-btn__icon--exit" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <polyline points="4 14 10 14 10 20"></polyline>
-      <polyline points="20 10 14 10 14 4"></polyline>
-      <line x1="14" y1="10" x2="21" y2="3"></line>
-      <line x1="3" y1="21" x2="10" y2="14"></line>
     </svg>
   `;
 
@@ -164,7 +141,23 @@ function buildControls() {
     </fieldset>
   `;
 
-  sidebarInner.appendChild(sidebarTitle);
+  const sidebarCloseBtn = document.createElement("button");
+  sidebarCloseBtn.className = "sidebar-close-btn";
+  sidebarCloseBtn.type = "button";
+  sidebarCloseBtn.setAttribute("aria-label", "Close menu");
+  sidebarCloseBtn.innerHTML = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  `;
+
+  const sidebarHeader = document.createElement("div");
+  sidebarHeader.className = "sidebar__header";
+  sidebarHeader.appendChild(sidebarTitle);
+  sidebarHeader.appendChild(sidebarCloseBtn);
+
+  sidebarInner.appendChild(sidebarHeader);
   sidebarInner.appendChild(controls);
   sidebar.appendChild(sidebarInner);
 
@@ -246,43 +239,44 @@ function buildControls() {
 
   const topBar = document.createElement("div");
   topBar.className = "top-bar";
-  topBar.appendChild(fullscreenBtn);
-  topBar.appendChild(moreBtn);
-  if (ipadMode) moreBtn.classList.add("more-btn--hidden");
+  topBar.appendChild(menuBtn);
+  if (ipadMode) menuBtn.classList.add("menu-btn--hidden");
 
   app.appendChild(topBar);
   app.appendChild(clocksRow);
 
+  const sidebarOverlay = document.createElement("div");
+  sidebarOverlay.className = "sidebar-overlay";
+  sidebarOverlay.setAttribute("aria-hidden", "true");
+
   const layout = document.createElement("div");
   layout.className = "layout";
+  layout.appendChild(sidebarOverlay);
   layout.appendChild(app);
   layout.appendChild(sidebar);
   document.body.appendChild(layout);
 
-  moreBtn.addEventListener("click", () => {
-    const open = sidebar.classList.toggle("sidebar--open");
-    moreBtn.classList.toggle("more-btn--open", open);
-    moreBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-  });
-
-  function updateFullscreenButton() {
-    const isFullscreen = !!document.fullscreenElement;
-    fullscreenBtn.classList.toggle("fullscreen-btn--active", isFullscreen);
-    fullscreenBtn.setAttribute("aria-label", isFullscreen ? "Exit fullscreen" : "Enter fullscreen");
+  function closeSidebar() {
+    sidebar.classList.remove("sidebar--open");
+    layout.classList.remove("layout--sidebar-open");
+    sidebarOverlay.classList.remove("sidebar-overlay--visible");
+    sidebarOverlay.setAttribute("aria-hidden", "true");
   }
 
-  fullscreenBtn.addEventListener("click", async () => {
-    try {
-      if (document.fullscreenElement) {
-        await document.exitFullscreen();
-      } else {
-        await document.documentElement.requestFullscreen();
-      }
-    } catch (_) {}
+  menuBtn.addEventListener("click", () => {
+    sidebar.classList.add("sidebar--open");
+    layout.classList.add("layout--sidebar-open");
+    sidebarOverlay.classList.add("sidebar-overlay--visible");
+    sidebarOverlay.setAttribute("aria-hidden", "false");
   });
 
-  document.addEventListener("fullscreenchange", updateFullscreenButton);
-  updateFullscreenButton();
+  sidebarCloseBtn.addEventListener("click", closeSidebar);
+
+  sidebarOverlay.addEventListener("click", () => {
+    if (sidebar.classList.contains("sidebar--open")) {
+      closeSidebar();
+    }
+  });
 
   let scheme = "Gradient";
   let showTime = showTimeInitial;
