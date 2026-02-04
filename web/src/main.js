@@ -122,23 +122,23 @@ function buildControls() {
   const showTimeInitial = ipadMode ? false : urlParams.get("time") !== "false";
 
   controls.innerHTML = `
-    <fieldset>
-      <legend>Fill Type</legend>
+    <div class="control-row" role="group" aria-labelledby="scheme-legend">
+      <span id="scheme-legend" class="control-legend">Fill</span>
       <label><input type="radio" name="scheme" value="Gradient" checked /> Gradient</label>
       <label><input type="radio" name="scheme" value="Solid" /> Solid</label>
       <label><input type="radio" name="scheme" value="None" /> None</label>
-    </fieldset>
-    <fieldset>
-      <legend>Color Theme</legend>
+    </div>
+    <div class="control-row" role="group" aria-labelledby="theme-legend">
+      <span id="theme-legend" class="control-legend">Theme</span>
       <label><input type="radio" name="theme" value="Dark" ${!isLight() ? "checked" : ""} /> Dark</label>
       <label><input type="radio" name="theme" value="Light" ${isLight() ? "checked" : ""} /> Light</label>
-    </fieldset>
-    <fieldset>
-      <legend>Display Time</legend>
+    </div>
+    <div class="control-row" role="group" aria-labelledby="time-legend">
+      <span id="time-legend" class="control-legend">Display Time</span>
       <label><input type="checkbox" name="time" ${showTimeInitial ? "checked" : ""} ${
     ipadMode ? "disabled" : ""
-  } /> Show time</label>
-    </fieldset>
+  } /></label>
+    </div>
   `;
 
   const sidebarCloseBtn = document.createElement("button");

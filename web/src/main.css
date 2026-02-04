@@ -494,27 +494,54 @@ body.light .controls {
   color: #333;
 }
 
-.controls fieldset {
-  border: none;
-  margin: 0 0 16px;
-  padding: 0;
+.control-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.controls legend {
+.control-legend {
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  font-size: 0.75rem;
 }
 
 .controls label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-right: 16px;
+  margin-right: 12px;
   cursor: pointer;
+  font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 .controls {
   width: 100%;
   padding: 0;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
 }
+
+@media (max-width: 600px) {
+  .control-legend,
+  .controls label {
+    font-size: 0.7rem;
+  }
+
+  .control-row {
+    margin-bottom: 10px;
+  }
+
+  .control-legend {
+    margin-right: 8px;
+  }
+
+  .controls label {
+    margin-right: 8px;
+    gap: 4px;
+  }
+}
+
