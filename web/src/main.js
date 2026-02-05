@@ -16,6 +16,10 @@ const darkPalettes = {
   rurd: values(count, 0.2, 1).map(reverse(d3.interpolatePuRd)),
   pubugn: values(count, 0.1, 1).map(d3.interpolatePlasma),
   ylorrd: values(count, 0, 1).map(reverse(d3.interpolateYlOrRd)),
+  // Custom palettes
+  utc: ["#4033CC", "#CB20D7", "#FC460F", "#F4D92B", "#FFFAA5"],
+  cet: ["#AB1170", "#E066AD", "#DAADEA", "#C7D7B7", "#EDFFF5"],
+  cst: ["#526EA0", "#AB99BE", "#CCA4D2", "#ACCFF3", "#ADFEF3"],
 };
 
 const lightPalettes = {
@@ -36,7 +40,7 @@ const timezones = [
   {tz: "Asia/Shanghai", name: "CST"},
 ];
 
-const darkColors = ["ylorrd", "inferno", "viridis", "cubehelix", "pubugn", "rurd"];
+const darkColors = ["utc", "inferno", "viridis", "cubehelix", "cet", "cst"];
 const lightColors = ["orrd", "viridis", "ylg", "ylgnbu", "pubugn", "rdpu"];
 
 // Generate seeds once per page load; reused when controls change
