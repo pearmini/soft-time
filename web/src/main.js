@@ -407,3 +407,18 @@ function buildControls() {
 }
 
 buildControls();
+
+// Auto-refresh at midnight
+(function () {
+  let lastDate = new Date().getDate();
+
+  function checkMidnight() {
+    const currentDate = new Date().getDate();
+    if (currentDate !== lastDate) {
+      window.location.reload();
+    }
+    requestAnimationFrame(checkMidnight);
+  }
+
+  requestAnimationFrame(checkMidnight);
+})();
