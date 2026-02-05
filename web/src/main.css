@@ -103,11 +103,11 @@ body.light .menu-btn:hover {
 }
 
 .sidebar--open {
-  width: 320px;
+  width: 380px;
 }
 
 .sidebar__inner {
-  width: 320px;
+  width: 380px;
   height: 100%;
   padding: 16px;
   overflow-y: auto;
