@@ -162,6 +162,7 @@ function buildControls() {
   sidebarDescription.innerHTML = `
     <p><em>Soft Time</em> presents six custom-designed, time zone–specific clock faces (UTC, GMT, EST, PST, CET, and CST) displayed together. These six time zones span key longitudinal zones and represent major cultural and economic centers, conveying a sense of global temporal flow. Each clock face is composed of moving gradient circles that shift continuously, allowing multiple time zones to be experienced simultaneously.</p>
     <p>The design is intended for integration into a physical digital watch, with the current presentation focusing on the on-screen experience. Rather than representing time directly, the constantly changing colors create a more sensual sense of temporal flow, inviting viewers to experience time as something fluid, playful, and continuously unfolding.</p>
+    <hr class="sidebar__divider" />
     <h3 class="sidebar__section-title">About the Creators</h3>
     <p><strong>Bairui Su</strong> is a creative toolmaker interested in creative coding, data visualization and interactive systems. His work tries to make coding more accessible and playful.</p>
     <p><strong>Julia Xu</strong> works with motion, material, and the digital. Her work creates spaces where time and attention drift, revealing quiet connections and the subtle rhythms of shared experience.</p>

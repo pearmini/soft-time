@@ -133,7 +133,11 @@ body.light .sidebar__inner {
   gap: 12px;
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid currentColor;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+body.light .sidebar__header {
+  border-bottom-color: rgba(0, 0, 0, 0.15);
 }
 
 .sidebar__title {
@@ -166,8 +170,12 @@ body.light .sidebar__inner {
 .sidebar__description {
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid currentColor;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
   opacity: 0.8;
+}
+
+body.light .sidebar__description {
+  border-top-color: rgba(0, 0, 0, 0.15);
 }
 
 .sidebar__description p {
@@ -180,8 +188,18 @@ body.light .sidebar__inner {
   margin-bottom: 0;
 }
 
+.sidebar__divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  margin: 20px 0;
+}
+
+body.light .sidebar__divider {
+  border-top-color: rgba(0, 0, 0, 0.15);
+}
+
 .sidebar__section-title {
-  margin: 20px 0 12px;
+  margin: 0 0 12px;
   font-size: 1rem;
   font-weight: 600;
 }
