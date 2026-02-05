@@ -29,6 +29,10 @@ const lightPalettes = {
   ylgnbu: values(count, 0.2, 1).map(d3.interpolateYlGnBu),
   pubugn: values(count, 0.3, 1).map(d3.interpolatePuBuGn),
   rdpu: values(count, 0.3, 1).map(d3.interpolateRdPu),
+  // Custom palettes
+  utc: ["#F6C78E", "#FF8861", "#CE6A85", "#985277", "#4C648A"],
+  est: ["#DAE2C4", "#C2BE74", "#A89B52", "#C58E95", "#B0676B"],
+  cst: ["#F6DDEA", "#D7B9D5", "#ADA7C9", "#90A8C3", "#51A3BF"],
 };
 
 const timezones = [
@@ -41,7 +45,7 @@ const timezones = [
 ];
 
 const darkColors = ["utc", "inferno", "viridis", "cubehelix", "cet", "cst"];
-const lightColors = ["orrd", "viridis", "ylg", "ylgnbu", "pubugn", "rdpu"];
+const lightColors = ["utc", "viridis", "est", "ylgnbu", "pubugn", "cst"];
 
 // Generate seeds once per page load; reused when controls change
 const seeds = timezones.map(() => Math.random() * 1000);
